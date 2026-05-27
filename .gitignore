@@ -3,3 +3,4 @@ RAG/.env
 __pycache__/
 *.pyc
 .qdrant/
+RAG_queue/.env
