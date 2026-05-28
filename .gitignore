@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 .qdrant/
 RAG_queue/.env
+Image_model/.env
