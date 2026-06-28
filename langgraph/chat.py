@@ -12,9 +12,10 @@ def chatbot(state: State):  #Node:just adds a text in pre-existing list
 
 def samplenode(state: State):
     print("Inside sample node",state)
-    return {"message": ["\n\nSample Message Appended"]}
+    return {"messages": ["\n\nSample Message Appended"]}
 
 graph_builder = StateGraph(State)
+
 graph_builder.add_node("chatbot", chatbot)  #We have to tell graph builder that chatbot is a node
 graph_builder.add_node("samplenode", samplenode)
 
