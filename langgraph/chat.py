@@ -1,14 +1,26 @@
+from dotenv import load_dotenv
 from typing_extensions import TypedDict
 from typing import Annotated
 from langgraph.graph.message import add_messages
 from langgraph.graph import StateGraph, START, END
+from langchain.tools import tool
+from langchain.chat_models import init_chat_model
+
+load_dotenv()
+
+llm= init_chat_model(
+    "gemini-2.5-flash",
+    model_provider="google_genai"
+)
 
 class State(TypedDict):
     messages:Annotated[list, add_messages]
 
 def chatbot(state: State):  #Node:just adds a text in pre-existing list
-    print("Inside chatbot node",state)
-    return {"messages":["\n\nHi, this a message from Chatbot Node"]}
+    response=llm.invoke(state.get("messages"))
+    return {"messages":[response]}
+    #print("Inside chatbot node",state)
+    #return {"messages":["\n\nHi, this a message from Chatbot Node"]}
 
 def samplenode(state: State):
     print("Inside sample node",state)
