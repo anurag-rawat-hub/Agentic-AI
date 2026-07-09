@@ -2,6 +2,9 @@ from dotenv import load_dotenv
 from mem0 import Memory
 import os
 from google import genai
+from groq import Groq
+#import logging
+#logging.basicConfig(level=logging.DEBUG)
 
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
@@ -14,11 +17,26 @@ config={
     "version":"v1.1",
     "embedder":{
         "provider":"gemini",
-        "config":{"api_key":api_key,"model":"models/gemini-embedding-001"}
+        "config":{
+            "api_key": api_key, 
+            "model": "models/gemini-embedding-001" # Embedder STILL needs the models/ prefix
+        }
     },
     "llm":{
-        "provider":"gemini",
-        "config":{"api_key":api_key, "model":"gemini-2.5-flash"}
+        "provider":"groq",
+        "config":{
+            "api_key": "your api key", 
+            "model": "llama-3.3-70b-versatile" 
+        }
+    },
+    "graph_store":{
+        "provider":"neo4j",
+        "config":{
+            "url":"neo4j+ssc_URI",
+            "username":"username",
+            "password":"your pass",
+            "database":"username"
+        }
     },
     "vector_store":{
         "provider":"qdrant",
@@ -29,7 +47,6 @@ config={
         }
     }
 }
-
 mem_client=Memory.from_config(config)
 
 while True:
@@ -40,7 +57,7 @@ while True:
 
     # Retrieve relevant memories
     memories = mem_client.search(
-        #user_id="Anurag",
+        user_id="Anurag",
         query=user_query,
         filters={"user_id":"Anurag"}
     )
@@ -70,12 +87,14 @@ Current User Query:
 
     print("AI:", response.text)
 
-    mem_client.add(
-        user_id="Anurag",
-        messages=[
-            {"role": "user", "content": user_query},
-            {"role": "assistant", "content": response.text}
-        ]
+    result = mem_client.add(
+    user_id="Anurag",
+    messages=[
+        {"role": "user", "content": user_query},
+        {"role": "assistant", "content": response.text}
+    ]
     )
+
+    print(result)
 
     print("Memory saved.\n")
