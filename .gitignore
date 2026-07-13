@@ -7,3 +7,4 @@ RAG_queue/.env
 Image_model/.env
 langgraph/.env
 mem_agent/.env
+voice_agent/.env
